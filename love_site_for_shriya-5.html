@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For Shriya 💖</title>
+<style>
+  body{margin:0;font-family:'Poppins',sans-serif;background:#ffecf2;color:#333;overflow:hidden}
+  .center{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:20px;text-align:center}
+  .btn{background:#ff4f84;color:#fff;padding:12px 28px;border-radius:30px;font-size:18px;cursor:pointer;margin-top:20px;border:none;box-shadow:0 4px 12px rgba(255,0,90,0.3)}
+  .heart{font-size:90px;animation:beat 1s infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+  .hidden{display:none}
+  .q-box{background:white;padding:35px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:330px}
+  #final{background:#ffdde9;animation:fadeIn 1.5s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .float-heart{position:absolute;color:#ff4f84;font-size:24px;animation:float 4s linear infinite}
+  @keyframes float{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-800px);opacity:0}}
+  canvas{border:2px solid #ff4f84;border-radius:20px;margin-top:20px;background:#fff;}
+</style>
+</head>
+<body>
+
+<div id="page1" class="center">
+  <div class="q-box">
+    <h2>Hi Shriya jiii 🎀</h2>
+    <p>Bubu 🐨 ne aapke liye kuch special banaya hai 💖</p>
+    <button class="btn" onclick="next(1)">Start 👉</button>
+  </div>
+</div>
+
+<div id="page2" class="center hidden">
+  <div class="q-box">
+    <h2>Kya aap Bubu ko pyaar karti hain? 😳</h2>
+    <button class="btn" onclick="next(2)">Haan ji 💕</button>
+  </div>
+</div>
+
+<div id="page3" class="center hidden">
+  <div class="q-box">
+    <h2>Aap hammesha Bubu ke saath rahogi na? 🥺</h2>
+    <button class="btn" onclick="next(3)">Always ❤️</button>
+  </div>
+</div>
+
+<div id="page4" class="center hidden">
+  <div class="q-box">
+    <h2>Shriya jiii 🎀</h2>
+    <p>Last question... ready? 😌</p>
+    <button class="btn" onclick="next(4)">Yesss 😘</button>
+  </div>
+</div>
+
+<div id="page5" class="center hidden">
+  <div class="q-box">
+    <h2>Fun Game Time! 🎮</h2>
+    <p>Catch the hearts ❤️ Click on them before they disappear!</p>
+    <canvas id="gameCanvas" width="300" height="400"></canvas>
+    <p id="score">Score: 0</p>
+    <p id="gameMsg" style="color:#ff4f84;font-weight:bold;font-size:18px;margin-top:10px"></p>
+    <button class="btn" onclick="next(5)">Done Playing</button>
+  </div>
+</div>
+
+<div id="final" class="center hidden">
+  <div class="heart">❤️</div>
+  <h2>Shriya jiii 🎀</h2>
+  <p style="max-width:350px;line-height:1.6;font-size:18px;">
+    Bubu 🐨 ka message:<br><br>
+    "Main aapse bahut pyar karta hu... I love you more mumma 🎀.<br><br>
+    Aapke face par smile lane ka pura try karunga ❤️<br><br>
+    Apna khyal rakho… aur Bubu aapko kabhi bina pareshan nahi rehne dega 😘😌<br><br>
+    Aap meri life ho, meri khushi ho… aur main hamesha aapke saath rahunga 💘"
+  </p>
+  <button class="btn" onclick="surprise()">Click for Surprise 🎁</button>
+</div>
+
+<script>
+function next(n){
+  if(n<=4) document.getElementById('page'+n).classList.add('hidden');
+  if(n==4){document.getElementById('page5').classList.remove('hidden'); startGame(); return;}
+  if(n==5){document.getElementById('page5').classList.add('hidden'); document.getElementById('final').classList.remove('hidden'); return;}
+  document.getElementById('page'+(n+1)).classList.remove('hidden');
+}
+
+function surprise(){
+  for(let i=0;i<30;i++){
+    let h=document.createElement('div');
+    h.className='float-heart';
+    h.style.left=Math.random()*100+'%';
+    h.style.bottom='0px';
+    h.innerHTML='💖';
+    h.style.animationDuration=(3+Math.random()*3)+'s';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  }
+  alert('I love you so so so much Shriya jiii 🎀 – Yours, Bubu 🐨');
+}
+
+/* GAME CODE */
+let canvas, ctx, hearts, score;
+function startGame(){
+  canvas=document.getElementById('gameCanvas');
+  ctx=canvas.getContext('2d');
+  hearts=[];
+  score=0;
+  document.getElementById('score').textContent='Score: 0';
+  document.getElementById('gameMsg').textContent='';
+  for(let i=0;i<5;i++) spawnHeart();
+  canvas.addEventListener('click',clickHeart);
+  requestAnimationFrame(updateGame);
+}
+function spawnHeart(){
+  hearts.push({x:Math.random()*270+15, y:400, r:20, speed:Math.random()*2+1});
+}
+function updateGame(){
+  ctx.clearRect(0,0,300,400);
+  hearts.forEach(h=>{
+    h.y-=h.speed;
+    ctx.fillStyle='#ff4f84';
+    ctx.beginPath();
+    ctx.arc(h.x,h.y,h.r,0,2*Math.PI);
+    ctx.fill();
+  });
+  hearts=hearts.filter(h=>h.y>-20);
+  if(hearts.length<5) spawnHeart();
+  requestAnimationFrame(updateGame);
+}
+function clickHeart(e){
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left;
+  const my=e.clientY-rect.top;
+  hearts.forEach((h,i)=>{
+    const d=Math.hypot(h.x-mx,h.y-my);
+    if(d<h.r){
+      hearts.splice(i,1); score++; document.getElementById('score').textContent='Score: '+score;
+      if(score>=10){
+        document.getElementById('gameMsg').textContent='🎉 Amazing! You scored 10! Here comes your special message! 💖';
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>
